@@ -9,6 +9,6 @@ services:
       - key: BOT_TOKEN
         value: 7672640193:AAGNRMRay0TW7oyn_EqBu4NiKeklTyEN4k4
       - key: API_ID
-        value: your_api_id_here
+        value: 28568452
       - key: API_HASH
-        value: your_api_hash_here
+        value: 8439af0a8ecc67bca4859180e7f9c8b9
