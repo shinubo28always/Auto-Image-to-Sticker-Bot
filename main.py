@@ -17,7 +17,7 @@ def home():
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "AniReal_Anime_Zone")
+UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "+i9H909Qg9M5lMzE9")
 
 # Initialize Pyrogram Client
 app = Client("img-to-sticker-bot", bot_token=BOT_TOKEN, api_id=API_ID, api_hash=API_HASH)
