@@ -70,7 +70,7 @@ async def start_handler(client, message: Message):
         return
 
     await message.reply_photo(
-        photo="https://example.com/start.jpg",  # Replace with your image URL
+        photo="https://graph.org/file/5fb2a9e904ae7870b8862-fb58603ada523ac527.jpg",  # Replace with your image URL
         caption=(
             "👋 **Hey there!**\n\n"
             "📸 **Just send me any photo — and I’ll turn it into a Telegram sticker while keeping its original size.**\n\n"
