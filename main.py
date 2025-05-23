@@ -71,10 +71,14 @@ async def start_handler(client, message: Message):
 
     await message.reply_photo(
         photo="https://example.com/start.jpg",  # Replace with your hosted image URL
-        caption=(
-            "**Hi!**\n\n"
-            "Send me any image and I will convert it into a Telegram sticker — *without resizing*.\n\n"
-            "Bot by: [@AniReal_Support](https://t.me/AniReal_Support)"
+        caption=(await message.reply_text(
+    "👋 **Hey there!**\n\n"
+    "📸 **Just send me any photo — and I’ll turn it into a Telegram sticker while keeping its original size.**\n\n"
+    "❌ **No crop.** ❌ **No compression.** ✅ **Just perfect stickers.**\n\n"
+    "⚡️ **Fast. Simple. Beautiful.**\n\n"
+    "🔗 **Support:** [@AniReal_Support](https://t.me/AniReal_Support)",
+    disable_web_page_preview=True
+)
         ),
         reply_markup=InlineKeyboardMarkup([
             [
