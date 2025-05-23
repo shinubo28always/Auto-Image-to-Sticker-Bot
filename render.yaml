@@ -7,7 +7,7 @@ services:
     startCommand: "python main.py"
     envVars:
       - key: BOT_TOKEN
-        value: 7672640193:AAGNRMRay0TW7oyn_EqBu4NiKeklTyEN4k4
+        value: 7897047283:AAFCZ7RhrmLGBeT40tIrNzxVo7NR1_c0AL4
       - key: API_ID
         value: 28568452
       - key: API_HASH
