@@ -1,3 +1,4 @@
+print("Bot is running...")
 import os
 from pyrogram import Client, filters
 from PIL import Image
