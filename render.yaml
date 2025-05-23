@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: image-to-sticker-bot
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python main.py"
+    envVars:
+      - key: BOT_TOKEN
+        value: 7672640193:AAGNRMRay0TW7oyn_EqBu4NiKeklTyEN4k4
+      - key: API_ID
+        value: your_api_id_here
+      - key: API_HASH
+        value: your_api_hash_here
