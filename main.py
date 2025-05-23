@@ -1,10 +1,10 @@
 import os
-import threading
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 from PIL import Image
 from io import BytesIO
 from flask import Flask
+import threading
 
 # Flask app for Render health check
 flask_app = Flask(__name__)
@@ -13,24 +13,27 @@ flask_app = Flask(__name__)
 def home():
     return "Bot is running"
 
-# Environment variables
+# Telegram credentials
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-UPDATE_CHANNEL = os.environ.get("UPDATE_CHANNEL", "+i9H909Qg9M5lMzE9")
+UPDATE_CHANNEL = "+i9H909Qg9M5lMzE9"  # Set your channel username here (without @), or leave blank to disable
 
-# Initialize Pyrogram Client
+# Initialize bot
 app = Client("img-to-sticker-bot", bot_token=BOT_TOKEN, api_id=API_ID, api_hash=API_HASH)
 
-# Check if user is subscribed
+# Force join check
 async def is_subscribed(client, user_id):
+    if not UPDATE_CHANNEL:
+        return True  # Skip check if channel not set
     try:
-        member = await client.get_chat_member(chat_id=f"@{UPDATE_CHANNEL}", user_id=user_id)
+        member = await client.get_chat_member(f"@{UPDATE_CHANNEL}", user_id)
         return member.status in ["member", "administrator", "creator"]
-    except:
+    except Exception as e:
+        print(f"[FORCE JOIN] Error: {e}")
         return False
 
-# Convert image to sticker
+# Sticker conversion
 async def convert_to_sticker(image_bytes):
     img = Image.open(BytesIO(image_bytes)).convert("RGBA")
     webp_io = BytesIO()
@@ -39,33 +42,17 @@ async def convert_to_sticker(image_bytes):
     webp_io.seek(0)
     return webp_io
 
-# Handle photo to sticker
-@app.on_message(filters.photo)
-async def handle_photo(client, message: Message):
-    if not await is_subscribed(client, message.from_user.id):
-        await message.reply_text(
-            "**You must join our update channel to use this bot.**",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]]
-            )
-        )
-        return
-    msg = await message.reply("Processing image into sticker...")
-    file = await message.download()
-    with open(file, "rb") as f:
-        webp_file = await convert_to_sticker(f.read())
-    await message.reply_sticker(sticker=webp_file)
-    await msg.delete()
-
 # /start command
 @app.on_message(filters.command("start") & filters.private)
 async def start_handler(client, message: Message):
-    if not await is_subscribed(client, message.from_user.id):
+    user_id = message.from_user.id
+
+    if not await is_subscribed(client, user_id):
         await message.reply_text(
-            "**You must join our update channel to use this bot.**",
-            reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]]
-            )
+            "🔒 **Please join our update channel to use this bot.**",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]
+            ])
         )
         return
 
@@ -83,47 +70,62 @@ async def start_handler(client, message: Message):
                 InlineKeyboardButton("About", callback_data="about"),
                 InlineKeyboardButton("Help", callback_data="help")
             ],
-            [
-                InlineKeyboardButton("Join Here", url=f"https://t.me/AniReal_Anime_Zone")
-            ]
-        ])
-    )
-
-# /create_own_bot command
-@app.on_message(filters.command("create_own_bot") & filters.private)
-async def custom_create_bot_handler(client, message: Message):
-    await message.reply_text(
-        "👋Hello Due! This is a Paid Bot.\n\n"
-        "**Create Your Own Bot, Talk My Senpai:** [@AniReal_Support](https://t.me/AniReal_Support)",
+            [InlineKeyboardButton("Join Here", url=f"https://t.me/AniReal_Updates" if UPDATE_CHANNEL else "https://t.me/AniReal_Anime_Zone")]
+        ]),
         disable_web_page_preview=True
     )
 
-# About & Help button callbacks
+# Handle photo to sticker
+@app.on_message(filters.photo)
+async def handle_photo(client, message):
+    user_id = message.from_user.id
+
+    if not await is_subscribed(client, user_id):
+        await message.reply_text(
+            "🔒 **Please join our update channel to use this bot.**",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]
+            ])
+        )
+        return
+
+    msg = await message.reply("Processing image into sticker...")
+    file = await message.download()
+    with open(file, "rb") as f:
+        webp_file = await convert_to_sticker(f.read())
+    await message.reply_sticker(sticker=webp_file)
+    await msg.delete()
+
+# Custom command
+@app.on_message(filters.command("create_own_bot") & filters.private)
+async def own_bot(client, message: Message):
+    await message.reply_text(
+        "👋Hello Dude! This is a Paid Bot.\n\nCreate Your Own Bot, Talk To My Senpai: [@AniReal_Support](https://t.me/AniReal_Support)",
+        disable_web_page_preview=True
+    )
+
+# Callbacks for buttons
 @app.on_callback_query()
 async def callback_handler(client, callback_query):
     data = callback_query.data
     if data == "about":
-        await callback_query.message.reply_text(
+        await callback_query.message.edit_text(
             "**About This Bot:**\n\n"
-            "This bot converts any image into a Telegram sticker without resizing or compression.\n"
-            "Perfect for high-quality stickers.\n\n"
-            "**Developer:** [@AniReal_Support](https://t.me/AniReal_Support)",
+            "This bot converts your photos to Telegram stickers while keeping their original size.\n\n"
+            "Bot by: [@AniReal_Support](https://t.me/AniReal_Support)",
             disable_web_page_preview=True
         )
     elif data == "help":
-        await callback_query.message.reply_text(
-            "**How to Use:**\n\n"
-            "1. Send me any image.\n"
-            "2. I will turn it into a sticker — no crop, no resize.\n"
-            "3. Enjoy using your sticker!\n\n"
-            "**Features:**\n"
-            "- Original size stickers\n"
-            "- Force join system\n"
-            "- Fast and simple\n\n"
-            "Support: [@AniReal_Chat_Group_Asia](https://t.me/AniReal_Chat_Group_Asia)"
+        await callback_query.message.edit_text(
+            "**Help & Features:**\n\n"
+            "1. Send any image to convert it to sticker.\n"
+            "2. No crop or resize — original aspect ratio is preserved.\n"
+            "3. Fast response, clean design.\n\n"
+            "Support: [@AniReal_Support](https://t.me/AniReal_Support)",
+            disable_web_page_preview=True
         )
 
-# Run both Flask and Telegram bot
+# Start Flask + Bot
 if __name__ == "__main__":
     def run_flask():
         port = int(os.environ.get("PORT", 5000))
