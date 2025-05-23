@@ -48,6 +48,16 @@ if __name__ == "__main__":
         flask_app.run(host="0.0.0.0", port=port)
 
     threading.Thread(target=run_flask).start()
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
+@Client.on_message(filters.command("start") & filters.private)
+async def start_handler(client: Client, message: Message):
+    await message.reply_text(
+        "**Hi!**\n\n"
+        "Send me any image and I will convert it into a Telegram sticker — *without resizing*.\n\n"
+        "Bot by: [@AniReal_Support](https://t.me/AniReal_Support)",
+        disable_web_page_preview=True
+    )
     print("Bot is running...")
     app.run()
