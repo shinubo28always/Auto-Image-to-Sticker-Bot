@@ -46,7 +46,7 @@ async def handle_photo(client, message: Message):
         await message.reply_text(
             "**You must join our update channel to use this bot.**",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Join Here", url=f"https://t.me/AniReal_Chat_Group_Asia")]]
+                [[InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]]
             )
         )
         return
@@ -64,7 +64,7 @@ async def start_handler(client, message: Message):
         await message.reply_text(
             "**You must join our update channel to use this bot.**",
             reply_markup=InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Join Here", url=f"https://t.me/{UPDATE_CHANNEL}")]]
+                [[InlineKeyboardButton("Join Here", url=f"https://t.me/+i9H909Qg9M5lMzE9")]]
             )
         )
         return
