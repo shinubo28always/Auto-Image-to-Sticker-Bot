@@ -1,4 +1,3 @@
-
 import os
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
@@ -19,7 +18,7 @@ def get_start_buttons():
             InlineKeyboardButton("ðŸ“Œ About", callback_data="about"),
             InlineKeyboardButton("â“ Help", callback_data="help")
         ],
-        [InlineKeyboardButton("ðŸ”— Join Here", url=FORCE_JOIN)]
+        [InlineKeyboardButton("ðŸ”— Join Here", url=https://t.me/AniReal_Anime_Zone)]
     ])
 
 async def is_user_joined(client, user_id):
@@ -35,7 +34,7 @@ async def start_command(client, message: Message):
         return await message.reply_photo(
             START_IMAGE,
             caption="ðŸ”’ Please join our update channel to use this bot.",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ðŸ”— Join Here", url=FORCE_JOIN)]])
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ðŸ”— Join Here", url=https://t.me/+i9H909Qg9M5lMzE9)]])
         )
     await message.reply_photo(
         START_IMAGE,
