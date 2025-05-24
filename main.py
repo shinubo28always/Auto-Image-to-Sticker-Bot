@@ -113,12 +113,23 @@ async def callback_query_handler(client, callback_query):
             disable_web_page_preview=True
         )
 
-# Handle image
 @app.on_message(filters.photo & filters.private)
-async def handle_photo(client, message):
-    if FORCE_JOIN:
-        if not await is_subscribed(client, message.from_user.id):
-            return
+async def photo_to_sticker(client, message):
+    # Ignore the bot's own image message (like /start image)
+    if message.from_user.is_self:
+        return
+
+    # Proceed to convert user photo to sticker
+    try:
+        photo = await message.download()
+        img = Image.open(photo).convert("RGBA")
+        output = BytesIO()
+        output.name = "sticker.webp"
+        img.save(output, "WEBP")
+        output.seek(0)
+        await message.reply_sticker(output)
+    except Exception as e:
+        await message.reply_text("Something went wrong:\n" + str(e))
 
     msg = await message.reply("Processing image into sticker...")
     file = await message.download()
