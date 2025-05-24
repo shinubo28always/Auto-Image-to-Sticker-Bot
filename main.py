@@ -20,7 +20,7 @@ def home():
 API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-FORCE_JOIN = os.environ.get("FORCE_JOIN", "https://t.me/+i9H909Qg9M5lMzE9")
+FORCE_JOIN = os.environ.get("FORCE_JOIN", "+9Fo0r2Wngqk0YTBl")
 JOIN_CHANNEL = "AniReal_Anime_Zone"
 START_IMG = "https://graph.org/file/5fb2a9e904ae7870b8862-fb58603ada523ac527.jpg"
 
